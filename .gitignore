@@ -1,0 +1,6 @@
+# Folders
+node_modules/
+
+# Files
+auth_info.json
+package-lock.json

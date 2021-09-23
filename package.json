@@ -1,0 +1,33 @@
+{
+  "name": "zack",
+  "version": "1.0.0",
+  "description": "A simple bot for Whatsapp",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahosall/ZackBot.git"
+  },
+  "keywords": [
+    "WaBot",
+    "WhatsApp-Bot",
+    "Bot",
+    "WhatsApp"
+  ],
+  "author": "Ahosall (Feh's)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ahosall/ZackBot/issues"
+  },
+  "homepage": "https://github.com/Ahosall/ZackBot#readme",
+  "dependencies": {
+    "@adiwajshing/baileys": "^3.5.2",
+    "dotenv": "^10.0.0",
+    "enmap": "^5.8.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
