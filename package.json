@@ -25,7 +25,8 @@
   "dependencies": {
     "@adiwajshing/baileys": "^3.5.2",
     "dotenv": "^10.0.0",
-    "enmap": "^5.8.7"
+    "enmap": "^5.8.7",
+    "fluent-ffmpeg": "^2.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const { WAConnection, Mimetype } = require('@adiwajshing/baileys')
-const { readdirSync, existsSync } = require('fs');
+const { readdirSync, existsSync, writeFileSync } = require('fs');
 
 const Enmap = require('enmap');
 
@@ -64,6 +64,9 @@ async function start() {
 
     // Connect
     await client.connect({timeoutMs: 60 * 1000});
+
+    // Save Infos
+    existsSync('./auth_info.json') == false && writeFileSync('./auth_info.json', JSON.stringify(client.base64EncodedAuthInfo(), null, '\t'))
     
     // Load common events
     console.log('\nLoading common events...')
