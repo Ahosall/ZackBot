@@ -2,7 +2,7 @@ const { MessageType } = require("@adiwajshing/baileys")
 
 const { text } = MessageType;
 
-const { isFiltered, addFilter } = require('../../utils/antispam')
+const { isFiltered, addFilter, isHitBan, addHitFilter } = require('../../utils/antispam')
 
 module.exports = (client) => {
   return async (msg) => {
@@ -60,13 +60,23 @@ module.exports = (client) => {
     
     msg.isMedia = (type === 'imageMessage' || type === 'videoMessage' || type === 'audioMessage')
     msg.isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
+    msg.isQuotedMsg = type === 'extendedTextMessage' && content.includes('textMessage')
+    msg.isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
+    msg.isQuotedVideo = type === 'extendedTextMessage' && content.includes('videoMessage')
+    msg.isQuotedAudio = type === 'extendedTextMessage' && content.includes('audioMessage')
+    msg.isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
+    msg.isQuotedContact = type === 'extendedTextMessage' && content.includes('contactMessage')
+    msg.isQuotedLocation = type === 'extendedTextMessage' && content.includes('locationMessage')
+
     msg.isGroup = msg.key.remoteJid.endsWith('@g.us') ? true : false
 
     msg.reply = (teks) => {
       client.sendMessage(from, teks, text, {
         quoted: msg
       })
+      return msg
     }
+
     if (msg.isGroup) {
       const mData = await client.groupMetadata(msg.key.remoteJid);
       msg.isAdmin = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
@@ -75,15 +85,15 @@ module.exports = (client) => {
       }
     }
 
-    if (isCmd && isFiltered(from) && msg.isGroup) {
-      console.log(sender)
+    if (isCmd && isFiltered(sender) && msg.isGroup) {
       let contentMsg = {
-        text: 'Opan, sem flood por favor.',
+        text: 'Opan, sem flood por favor. Caso continue você será proíbido de usar meus comandos novamente.',
         contextInfo: {
           mentionedJid: [sender]
         }
       }
 
+      addHitFilter(sender)
       return msg.reply(contentMsg)
     }
 
@@ -94,7 +104,7 @@ module.exports = (client) => {
       msg.reply('Este comando só funciona em grupos.');
       return
     }
-    addFilter(from)
+    addFilter(sender)
     cmd.run(client, msg, args)
   }
 }
