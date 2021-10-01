@@ -24,9 +24,13 @@
   "homepage": "https://github.com/Ahosall/ZackBot#readme",
   "dependencies": {
     "@adiwajshing/baileys": "^3.5.2",
+    "axios": "^0.21.4",
     "dotenv": "^10.0.0",
     "enmap": "^5.8.7",
-    "fluent-ffmpeg": "^2.1.2"
+    "fluent-ffmpeg": "^2.1.2",
+    "image-to-base64": "^2.2.0",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

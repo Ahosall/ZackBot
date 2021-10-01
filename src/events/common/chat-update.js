@@ -1,6 +1,6 @@
 const { MessageType } = require("@adiwajshing/baileys")
 
-const { text } = MessageType;
+const { extendedText, text } = MessageType;
 
 const { isFiltered, addFilter, isHitBan, addHitFilter } = require('../../utils/antispam')
 
@@ -18,7 +18,7 @@ module.exports = (client) => {
     const content = JSON.stringify(msg.message)
     const from = msg.key.remoteJid
     const type = Object.keys(msg.message)[0]
-    const ownerNumber = [`5565992374615@s.whatsapp.net`, `556592374615@s.whatsapp.net`]
+    const ownerNumber = [`5565992374615@s.whatsapp.net`]
 
     client.chatRead(from)
 
@@ -53,7 +53,7 @@ module.exports = (client) => {
       notify: jid.replace(/@.+/, '')
     }
 
-    // Function Uteis
+    // Function Utils
     msg.jid = jid
     
     msg.isOwner = ownerNumber.includes(sender)
@@ -70,16 +70,35 @@ module.exports = (client) => {
 
     msg.isGroup = msg.key.remoteJid.endsWith('@g.us') ? true : false
 
-    msg.reply = (teks) => {
-      client.sendMessage(from, teks, text, {
+    msg.reply = (string) => {
+      client.sendMessage(from, string, text, {
         quoted: msg
       })
       return msg
     }
 
+    msg.mentions = (string, data, id) => {
+      if (id == null || id == undefined || id == false) {
+        client.sendMessage(msg.key.remoteJid, string.trim(), extendedText, {
+          contextInfo: {
+            "mentionedJid": data
+          }
+        })
+      } else {
+        client.sendMessage(msg.key.remoteJid, string.trim(), extendedText, {
+          quoted: msg,
+          contextInfo: {
+            "mentionedJid": data
+          }
+        })
+      }
+    }
+
     if (msg.isGroup) {
       const mData = await client.groupMetadata(msg.key.remoteJid);
+      client.user.adm = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
       msg.isAdmin = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
+
       msg.send = (msg) => {
         client.sendMessage(mData.id, msg, MessageType.text);
       }
@@ -87,19 +106,18 @@ module.exports = (client) => {
 
     if (isCmd && isFiltered(sender) && msg.isGroup) {
       let contentMsg = {
-        text: 'Opan, sem flood por favor. Caso continue você será proíbido de usar meus comandos novamente.',
+        text: 'Opan, sem flood por favor.',
         contextInfo: {
           mentionedJid: [sender]
         }
       }
-
-      addHitFilter(sender)
       return msg.reply(contentMsg)
     }
-
     const cmd = client.commands.get(command) || client.aliases.get(command);
     if (!cmd) return
-    console.log(`[LOG] ${command} executed`);
+    if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
+    console.log(cmd)
+    console.log(`[LOG] ${cmd} executed by ${msg.jid.split('@')[0]}. [${Date.now()}]`);
     if (cmd.conf.onlyGroups && !msg.isGroup) {
       msg.reply('Este comando só funciona em grupos.');
       return

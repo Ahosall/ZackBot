@@ -4,56 +4,53 @@ module.exports = {
     let head = ['*Comandos* - *Zack*\n\n Prefixo: *' + prefix + '*\n'];
 
     let commandsHelp = {
-      info: [],
-      admins: [],
+      anime: [],
+      fun: [],
       utils: []
     };
 
     client.commands.forEach(async (cmds) => {
-        let category = cmds.help.category;
-
-        if (category == 'Admins') {
-          if (cmds.help.aliases) {
-            commandsHelp.admins.push(` *${prefix}${cmds.help.name}*:\n     - Descrição: ${cmds.help.description}\n     - Alias: ${cmds.help.aliases.join(', ')}\n     - Como usar: ${prefix}${cmds.help.usage}\n`)
-          } else {
-            commandsHelp.admins.push(` *${prefix}${cmds.help.name}*\n     - Descrição: ${cmds.help.description}\n     - Como usar: ${prefix}${cmds.help.usage}\n`)
-          }
-        } else if (category == 'Info') {
-          if (cmds.help.aliases) {
-            commandsHelp.info.push(` *${prefix}${cmds.help.name}*:\n     - Descrição: ${cmds.help.description}\n     - Alias: ${cmds.help.aliases.join(', ')}\n     - Como usar: ${prefix}${cmds.help.usage}\n`)
-          } else {
-            commandsHelp.info.push(` *${prefix}${cmds.help.name}*\n     - Descrição: ${cmds.help.description}\n     - Como usar: ${prefix}${cmds.help.usage}\n`)
-          }
-        } else if (category == 'Utils') {
-          if (cmds.help.aliases) {
-            commandsHelp.utils.push(` *${prefix}${cmds.help.name}*:\n     - Descrição: ${cmds.help.description}\n     - Alias: ${cmds.help.aliases.join(', ')}\n     - Como usar: ${prefix}${cmds.help.usage}\n`)
-          } else {
-            commandsHelp.utils.push(` *${prefix}${cmds.help.name}*\n     - Descrição: ${cmds.help.description}\n     - Como usar: ${prefix}${cmds.help.usage}\n`)
-          }
+      let category = cmds.help.category;
+      
+      if (category == 'Anime') {
+        if (cmds.help.aliases) {
+          commandsHelp.anime.push(` *${prefix}${cmds.help.name}*:\n     *- Descrição*: ${cmds.help.description}\n     *- Alias*: ${cmds.help.aliases.join(', ')}\n     *- Como usar*: ${prefix}${cmds.help.usage}\n`)
+        } else {
+          commandsHelp.anime.push(` *${prefix}${cmds.help.name}*\n     *- Descrição*: ${cmds.help.description}\n     *- Como usar*: ${prefix}${cmds.help.usage}\n`)
         }
-
-      });
+      } else if (category == 'Fun') {
+        if (cmds.help.aliases) {
+          commandsHelp.fun.push(` *${prefix}${cmds.help.name}*:\n     *- Descrição*: ${cmds.help.description}\n     *- Alias*: ${cmds.help.aliases.join(', ')}\n     *- Como usar*: ${prefix}${cmds.help.usage}\n`)
+        } else {
+          commandsHelp.fun.push(` *${prefix}${cmds.help.name}*\n     *- Descrição*: ${cmds.help.description}\n     *- Como usar*: ${prefix}${cmds.help.usage}\n`)
+        }
+      } else if (category == 'Utils') {
+        if (cmds.help.aliases) {
+          commandsHelp.utils.push(` *${prefix}${cmds.help.name}*:\n     *- Descrição*: ${cmds.help.description}\n     *- Alias*: ${cmds.help.aliases.join(', ')}\n     *- Como usar*: ${prefix}${cmds.help.usage}\n`)
+        } else {
+          commandsHelp.utils.push(` *${prefix}${cmds.help.name}*\n     *- Descrição*: ${cmds.help.description}\n     *- Como usar*: ${prefix}${cmds.help.usage}\n`)
+        }
+      }
+    });
 
     if (args.length != 0) {
-      if (args[0].toLowerCase() == 'admins' || args[0].toLowerCase() == 'adm') {
-        if (!msg.isOwner && !msg.isAdmin) return msg.reply('Você não tem permissão para ver essa categoria.');
+      if (args[0].toLowerCase() == 'anime') {
+        cmdAnime = commandsHelp.anime.join('\n');
 
-        cmdAdms = commandsHelp.admins.join('\n');
+        msg.reply(`${head}\n Comandos de *Anime*.\n\n${cmdAnime}`)
+      } else if (args[0].toLowerCase() == 'fun') {
+        cmdFun = commandsHelp.fun.join('\n');
 
-        msg.reply(`${head}\n Comandos de *Administração*.\n\n${cmdAdms}`)
-      } else if (args[0].toLowerCase() == 'info') {
-        cmdInfo = commandsHelp.info.join('\n');
-
-        msg.reply(`${head}\n Comandos de *Informações*.\n\n${cmdInfo}`)
+        msg.reply(`${head}\n Comandos de *Interação*.\n\n${cmdFun}`)
       } else if (args[0].toLowerCase() == 'utils') {
         cmdUtils = commandsHelp.utils.join('\n');
 
         msg.reply(`${head}\n Comandos *Úteis*.\n\n${cmdUtils}`)
       } else {
-        return msg.reply(`${head}\n*Categorias:*\n  *Admins*\n    - ${prefix}help admins/adm\n  *info*\n    - ${prefix}help info\n  *Utils*\n    - ${prefix}help utils`)
+        return msg.reply(`${head}\n*Categorias:*\n  *Fun*\n    - ${prefix}help fun\n  *Utils*\n    - ${prefix}help utils`)
       }
     } else {
-      return msg.reply(`${head}\n*Categorias:*\n  *Admins*\n    - ${prefix}help admins/adm\n  *info*\n    - ${prefix}help info\n  *Utils*\n    - ${prefix}help utils`)
+      return msg.reply(`${head}\n*Categorias:*\n  *Fun*\n    - ${prefix}help fun\n  *Utils*\n    - ${prefix}help utils`)
     }
   },
   conf: {
