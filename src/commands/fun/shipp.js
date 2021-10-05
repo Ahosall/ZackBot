@@ -1,9 +1,9 @@
 module.exports = {
   run: async (client, msg, args) => {
     let mentioned = msg.message.extendedTextMessage;
-    if (mentioned == null) return msg.reply('Eu preciso que você marque duas pessoas...');    
+    if (mentioned == null) return msg.reply('Eu preciso que você marque duas pessoas...');
     mentioned = mentioned.contextInfo.mentionedJid
-    if (mentioned.length == 1 || mentioned.length < 2) return msg.reply('Eu preciso que você marque duas pessoas...');
+    if (mentioned.length == 1 || mentioned.length < 2) return msg.reply('Eu preciso que você marque mais uma pessoinha...');
     
     let random = `${Math.floor(Math.random() * 100)}`;
 

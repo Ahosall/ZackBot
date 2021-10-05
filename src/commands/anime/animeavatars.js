@@ -7,18 +7,23 @@ const { image } = MessageType;
 
 module.exports = {
   run: async (client, msg, args) => {
+    let codeErr = Math.floor(Math.random() * 1000)
     res = axios.get(`https://nekos.life/api/v2/img/avatar`).then(res => {
       imageToBase64(res.data.url)
-        .then((ress) => {
-            let buff = Buffer.from(ress, 'base64')
-            client.sendMessage(msg.key.remoteJid, buff, image, {
-                quoted: msg
-            });
-      })
+      .then((ress) => {
+          let buff = Buffer.from(ress, 'base64')
+          client.sendMessage(msg.key.remoteJid, buff, image, {
+              quoted: msg
+          })
+      }).catch((err) =>{
+        console.log(`Err: ${codeErr}\n\n${err}\n\n`);
+        return msg.reply(`Erro ao executar comando, consulte o desenvolvedor.\n\n*Código do Erro*: ${codeErr}`);
+      });
     })
   },
   conf: {
-    onlyGroups: true
+    onlyGroups: true,
+    stts: 'Off'
   },
   get help() {
     return {

@@ -9,7 +9,7 @@ module.exports = {
     } else {
       mesg = "Você perdeu..."
     }
-    let slott = `Consiga 3 iguais para ganhar\n╔═══ ≪ •❈• ≫ ════╗\n║   [💰SLOT💰 | *777* ]        \n║                                             \n║                                             \n║       ${somtoy}  ◄━━┛\n║            \n║                                           \n║   [💰SLOT💰 | *777* ]        \n╚════ ≪ •❈• ≫ ═══╝\n\n${mesg}`
+    let slott = `Consiga 3 iguais para ganhar\n╔═══ ≪ •❈• ≫ ════╗\n║   [💰SLOT💰 | *777* ]        \n║                                             \n║                                             \n║      ${somtoy}  ◄━━┛\n║            \n║                                           \n║   [💰SLOT💰 | *777* ]        \n╚════ ≪ •❈• ≫ ═══╝\n\n${mesg}`
 
     msg.reply(slott)
 

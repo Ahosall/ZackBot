@@ -1,8 +1,14 @@
 module.exports = {
   run: async (client, msg, args) => {
+    let mentioned = msg.message.extendedTextMessage != null ? msg.message.extendedTextMessage.contextInfo.mentionedJid : []
+    let user = mentioned.length >= 1 ? mentioned : [msg.jid];
+    
+
     let size = `${Math.floor(Math.random() * 35)}`;
 
-    if (size < 14) {
+    if (size == 0) {
+      pp = 'Ué mlk, cadé teu pau? '
+    } else if (size < 14) {
       pp = 'Só a fimose 🤣🤣'
     } else if (size <= 16) {
       pp = 'Eita porr- vai pegar manga com isso? 🤔'
@@ -12,9 +18,12 @@ module.exports = {
       pp = 'Tu tem um poste no meio das pernas...'
     } else if (size >= 25) {
       pp = 'Ta procurando petróleo com isso? 🤨'
+    } else if (size >= 30) {
+      pp = 'Um arranha céus! 😱'
     }
-    text = `Seu pau tem ${size}cm\n\n${pp}`
-    msg.reply(text)
+    
+    text = `O pau do @${user[0].split('@')[0]} tem ${size}cm\n\n${pp}`
+    msg.mentions(text, user)
   },
   conf: {
     onlyGroups: true

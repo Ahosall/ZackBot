@@ -18,7 +18,7 @@ module.exports = (client) => {
     const content = JSON.stringify(msg.message)
     const from = msg.key.remoteJid
     const type = Object.keys(msg.message)[0]
-    const ownerNumber = [`5565992374615@s.whatsapp.net`]
+    const ownerNumber = ['556592374615@s.whatsapp.net', '5565992374615@s.whatsapp.net']
 
     client.chatRead(from)
 
@@ -55,6 +55,7 @@ module.exports = (client) => {
 
     // Function Utils
     msg.jid = jid
+    msg.groups = client.chats.array;
     
     msg.isOwner = ownerNumber.includes(sender)
     
@@ -77,6 +78,11 @@ module.exports = (client) => {
       return msg
     }
 
+    msg.send = (string) => {
+      client.sendMessage(from, string, text)
+      return msg
+    }
+
     msg.mentions = (string, data, id) => {
       if (id == null || id == undefined || id == false) {
         client.sendMessage(msg.key.remoteJid, string.trim(), extendedText, {
@@ -96,6 +102,8 @@ module.exports = (client) => {
 
     if (msg.isGroup) {
       const mData = await client.groupMetadata(msg.key.remoteJid);
+
+      msg.group = mData;
       client.user.adm = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
       msg.isAdmin = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
 
@@ -115,13 +123,10 @@ module.exports = (client) => {
     }
     const cmd = client.commands.get(command) || client.aliases.get(command);
     if (!cmd) return
-    if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
-    console.log(cmd)
-    console.log(`[LOG] ${cmd} executed by ${msg.jid.split('@')[0]}. [${Date.now()}]`);
-    if (cmd.conf.onlyGroups && !msg.isGroup) {
-      msg.reply('Este comando só funciona em grupos.');
-      return
-    }
+    if (cmd.conf.stts == 'Off') return
+    // if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
+    console.log(`[LOG] ${msg.jid.split('@')[0]} ran ${cmd.help.name}.`);
+    if (cmd.conf.onlyGroups && !msg.isGroup) return msg.reply('Este comando só funciona em grupos.');
     addFilter(sender)
     cmd.run(client, msg, args)
   }

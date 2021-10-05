@@ -18,7 +18,8 @@ module.exports = {
     })
   },
   conf: {
-    onlyGroups: true
+    onlyGroups: true,
+    stts: 'Off'
   },
   get help() {
     return {
