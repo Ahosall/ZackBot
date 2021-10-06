@@ -8,7 +8,7 @@ const { sticker, text, image, video } = MessageType;
 
 module.exports = {
   run: async (client, msg, args) => {    
-    const tube = ['Empty', 'Full', 'Empty', 'Empty', 'Empty', 'Full'];
+    const tube = ['Empty', 'Empty', 'Empty', 'Empty', 'Empty', 'Full'];
     const shot = tube[Math.floor(Math.random() * (tube.length))]
     
     let reloadStk = ['reload1', 'reload2', 'reload3'];
