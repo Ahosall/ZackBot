@@ -4,6 +4,7 @@
   "description": "A simple bot for Whatsapp",
   "main": "src/app.js",
   "scripts": {
+    "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
   "repository": {
