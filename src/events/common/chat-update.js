@@ -124,7 +124,7 @@ module.exports = (client) => {
     const cmd = client.commands.get(command) || client.aliases.get(command);
     if (!cmd) return
     if (cmd.conf.stts == 'Off') return
-    // if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
+    if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
     console.log(`[LOG] ${msg.jid.split('@')[0]} ran ${cmd.help.name}.`);
     if (cmd.conf.onlyGroups && !msg.isGroup) return msg.reply('Este comando só funciona em grupos.');
     addFilter(sender)

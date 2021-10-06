@@ -34,7 +34,6 @@ module.exports = {
 
     } else if ((msg.isMedia && msg.message.videoMessage.seconds < 11 || msg.isQuotedVideo && msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
         const encmedia = msg.isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
-        console.log(encmedia)
         const media = await client.downloadAndSaveMediaMessage(encmedia)
 
         nameStk = `${Math.floor(Math.random() * 10000)}.webp`;

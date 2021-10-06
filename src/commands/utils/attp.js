@@ -14,7 +14,7 @@ module.exports = {
     client.sendMessage(msg.key.remoteJid, stk, sticker, {quoted: msg});
   },
   conf: {
-    onlyGroups: true
+    onlyGroups: false
   },
   get help() {
     return {
