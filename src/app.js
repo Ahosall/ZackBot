@@ -94,6 +94,7 @@ async function start() {
         }
     });
     await console.log('\nStatus:')
+    require('./utils/server');
 };
 
 console.clear();
