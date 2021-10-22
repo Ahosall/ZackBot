@@ -9,8 +9,8 @@ module.exports = {
     if (args.length < 1) return msg.reply(`O comando necessita de um argumento.\n\n${process.env.PREFIX}attp Ahos Supremacy`);
 
     msg.reply('Aguarde um momento por favor, estou criando seu sticker.')
-    
-    stk = await getBuffer(`https://api.xteam.xyz/attp?file&text=${encodeURIComponent(args.join(' '))}`)
+    text = encodeURIComponent(args.join(' '))
+    stk = await getBuffer(`https://api.xteam.xyz/attp?file&text=${text}`)
     client.sendMessage(msg.key.remoteJid, stk, sticker, {quoted: msg});
   },
   conf: {

@@ -25,7 +25,9 @@ module.exports = (client) => {
     const prefix = process.env.PREFIX || ':';
 
     let body;
-    
+
+    console.log(type)
+
     if (type == 'conversation' && msg.message.conversation.startsWith(prefix)) {
       body = msg.message.conversation;
     } else if (type == 'imageMessage' && msg.message.imageMessage.caption.startsWith(prefix)) {
@@ -34,6 +36,8 @@ module.exports = (client) => {
       body = msg.message.videoMessage.caption;
     } else if (type == 'extendedTextMessage' && msg.message.extendedTextMessage.text.startsWith(prefix)) {
       body = msg.message.extendedTextMessage.text;
+    } else if (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedDisplayText.startsWith(prefix)) {
+      body = msg.message.buttonsResponseMessage.selectedDisplayText;
     } else {
       body = ''
     }
@@ -46,13 +50,11 @@ module.exports = (client) => {
 
     const sender = msg.key.fromMe ? client.user.jid : msg.key.remoteJid.endsWith('@g.us') ? msg.participant : msg.key.remoteJid
     const jid = sender
-
-    if (sender.split('@')[0] == '19029372434') return
     
     const contacts = msg.key.fromMe ? client.user.jid : client.contacts[sender] || {
       notify: jid.replace(/@.+/, '')
     }
-
+    
     // Function Utils
     msg.jid = jid
     msg.groups = client.chats.array;
@@ -104,6 +106,7 @@ module.exports = (client) => {
       const mData = await client.groupMetadata(msg.key.remoteJid);
 
       msg.group = mData;
+
       client.user.adm = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
       msg.isAdmin = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
 
@@ -121,6 +124,7 @@ module.exports = (client) => {
       }
       return msg.reply(contentMsg)
     }
+
     const cmd = client.commands.get(command) || client.aliases.get(command);
     if (!cmd) return
     if (cmd.conf.stts == 'Off') return

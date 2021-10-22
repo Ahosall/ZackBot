@@ -1,7 +1,11 @@
+const { MessageType, MessageOptions, Mimetype } = require('@adiwajshing/baileys')
+const { buttonsMessage } = MessageType
+
+
 module.exports = {
   run: async (client, msg, args) => {
     const prefix = process.env.PREFIX || ':';
-    let head = ['*Comandos* - *Zack*\n\n Prefixo: *' + prefix + '*\n'];
+    let head = ['*Comandos - Zack*'];
 
     let commandsHelp = {
       anime: [],
@@ -47,10 +51,24 @@ module.exports = {
 
         msg.reply(`${head}\n Comandos *Úteis*.\n\n${cmdUtils}`)
       } else {
-        return msg.reply(`${head}\n*Categorias:*\n  *Fun*\n    - ${prefix}help fun\n  *Utils*\n    - ${prefix}help utils`)
+        msg.reply(`${head}\n*Categorias:*\n  *Fun*\n    - ${prefix}help fun\n  *Utils*\n    - ${prefix}help utils`)
+        return
       }
     } else {
-      return msg.reply(`${head}\n*Categorias:*\n  *Fun*\n    - ${prefix}help fun\n  *Utils*\n    - ${prefix}help utils`)
+      const buttons = [
+        {buttonId: 'btnHFun', buttonText: {displayText: '!help fun'}, type: 1},
+        {buttonId: 'btnHUtils', buttonText: {displayText: '!help utils'}, type: 1}
+      ]
+
+      let buttonMsg = {
+        contentText: `${head}\n\nPrefixo: ${prefix}\n\nCategorias:\n  Fun\n  Utils`,
+        footerText: `Selecione um dos botões`,
+        buttons: buttons,
+        headerType: 1
+      }
+
+      client.sendMessage(msg.key.remoteJid, buttonMsg, buttonsMessage)
+      return 
     }
   },
   conf: {
