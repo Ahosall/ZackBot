@@ -19,6 +19,18 @@ async function start() {
     console.log('Loading commands')
     readdirSync('./src/commands').forEach(dir => {
         const commands = readdirSync(`./src/commands/${dir}/`).filter(file => file.endsWith(".js"));
+
+        switch (dir) {
+          case 'anime':
+            console.log('\n  Commands anime:')
+            break
+          case 'fun':
+            console.log('\n  Commands fun:')
+            break
+          case 'utils':
+            console.log('\n  Commands Utils:')
+            break
+        }
         
         commands.forEach(f => {
             try {
@@ -32,10 +44,10 @@ async function start() {
                   client.aliases.set(alias, props)
                 });
         
-                console.log(`  [OK] ${dir} - ${props.help.name} [${props.help.aliases}]`);
+                console.log(`    [OK] ${props.help.name} [${props.help.aliases.join(', ')}]`);
               } else {
                 client.commands.set(props.help.name, props)
-                console.log(`  [OK] ${dir} - ${props.help.name}`);
+                console.log(`    [OK] ${props.help.name}`);
               }
               
               
@@ -82,6 +94,7 @@ async function start() {
         }
     });
     await console.log('\nStatus:')
+    require('./utils/server');
 };
 
 console.clear();

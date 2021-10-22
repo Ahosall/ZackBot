@@ -35,7 +35,7 @@ module.exports = {
     } else if ((msg.isMedia && msg.message.videoMessage.seconds < 11 || msg.isQuotedVideo && msg.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
         const encmedia = msg.isQuotedVideo ? JSON.parse(JSON.stringify(msg).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : msg
         const media = await client.downloadAndSaveMediaMessage(encmedia)
-        
+
         nameStk = `${Math.floor(Math.random() * 10000)}.webp`;
 
         await ffmpeg(`./${media}`)
@@ -56,6 +56,8 @@ module.exports = {
             .addOutputOptions([`-vcodec`, `libwebp`, `-vf`, `crop=w='min(min(iw\,ih)\,320)':h='min(min(iw\,ih)\,320)',scale=200:200,setsar=1,fps=15`, `-loop`, `0`, `-ss`, `00:00:00.0`, `-t`, `00:00:10.0`, `-preset`, `default`, `-an`, `-vsync`, `0`, `-s`, `512:512`])
             .toFormat('webp')
             .save(nameStk)
+    } else {
+      msg.reply('Marque uma imagem por favor...')
     }
   },
   conf: {
