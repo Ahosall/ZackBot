@@ -1,16 +1,18 @@
-const { MessageType } = require("@adiwajshing/baileys")
+const Enmap = require('enmap');
 
-const { extendedText, text } = MessageType;
+const { MessageType } = require('@adiwajshing/baileys')
 
-const { isFiltered, addFilter, isHitBan, addHitFilter } = require('../../utils/antispam')
+const { buttonsMessage, extendedText, text } = MessageType;
 
 module.exports = (client) => {
   return async (msg) => {
     if (!msg.hasNewMessage) return
+
     msg = msg.messages.all()[0]
 
     if (!msg.message) return
     msg.message = (Object.keys(msg.message)[0] == 'ephemeralMessage') ? msg.message.ephemeralMessage.message : msg.message
+
 
     if (!msg.message) return
     if (msg.key && msg.remoteJid == 'status@broadcast') return
@@ -22,11 +24,9 @@ module.exports = (client) => {
 
     client.chatRead(from)
 
-    const prefix = process.env.PREFIX || ':';
+    const prefix = '$';
 
     let body;
-
-    console.log(type)
 
     if (type == 'conversation' && msg.message.conversation.startsWith(prefix)) {
       body = msg.message.conversation;
@@ -46,7 +46,6 @@ module.exports = (client) => {
     const args = body.slice(1).trim().split(' ').slice(1)
 
     const isCmd = body.startsWith(prefix)
-    
 
     const sender = msg.key.fromMe ? client.user.jid : msg.key.remoteJid.endsWith('@g.us') ? msg.participant : msg.key.remoteJid
     const jid = sender
@@ -62,7 +61,6 @@ module.exports = (client) => {
     msg.isOwner = ownerNumber.includes(sender)
     
     msg.isMedia = (type === 'imageMessage' || type === 'videoMessage' || type === 'audioMessage')
-    msg.isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
     msg.isQuotedMsg = type === 'extendedTextMessage' && content.includes('textMessage')
     msg.isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
     msg.isQuotedVideo = type === 'extendedTextMessage' && content.includes('videoMessage')
@@ -72,6 +70,10 @@ module.exports = (client) => {
     msg.isQuotedLocation = type === 'extendedTextMessage' && content.includes('locationMessage')
 
     msg.isGroup = msg.key.remoteJid.endsWith('@g.us') ? true : false
+
+    // Não vai mais responder os statuskkkk
+    if (msg.jid.split('@')[0] == 'status') return
+    else if (msg.jid.split('@')[0] == '16784345779') return
 
     msg.reply = (string) => {
       client.sendMessage(from, string, text, {
@@ -102,6 +104,14 @@ module.exports = (client) => {
       }
     }
 
+    msg.buttons = (buttons, quote) => {
+      if (quote != false || quote != undefined) {    
+        client.sendMessage(msg.key.remoteJid, buttons, buttonsMessage, {quoted: msg})
+      } else {
+        client.sendMessage(msg.key.remoteJid, buttons, buttonsMessage)
+      }
+    }
+
     if (msg.isGroup) {
       const mData = await client.groupMetadata(msg.key.remoteJid);
 
@@ -109,29 +119,25 @@ module.exports = (client) => {
 
       client.user.adm = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
       msg.isAdmin = mData.participants.find(participant => participant.jid == msg.jid).isAdmin
-
+      
       msg.send = (msg) => {
         client.sendMessage(mData.id, msg, MessageType.text);
       }
-    }
 
-    if (isCmd && isFiltered(sender) && msg.isGroup) {
-      let contentMsg = {
-        text: 'Opan, sem flood por favor.',
-        contextInfo: {
-          mentionedJid: [sender]
-        }
-      }
-      return msg.reply(contentMsg)
     }
-
+    
     const cmd = client.commands.get(command) || client.aliases.get(command);
     if (!cmd) return
+    
     if (cmd.conf.stts == 'Off') return
-    // if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
+    //if (!msg.isOwner) return msg.reply('Bot em modo de desenvolvimento.')
     console.log(`[LOG] ${msg.jid.split('@')[0]} ran ${cmd.help.name}.`);
     if (cmd.conf.onlyGroups && !msg.isGroup) return msg.reply('Este comando só funciona em grupos.');
-    addFilter(sender)
-    cmd.run(client, msg, args)
+    try {
+      cmd.run(client, msg, args)
+    } catch (err) {
+      msg.send('Whoops... parece que houve um erro... se ele persistir, contate o desenvolvedor.')
+      console.log('---\n', err)
+    }
   }
 }
